@@ -1,6 +1,6 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
-import 'location_data.dart';
+import './location_data.dart';
 
 class FavoriteLocations extends ChangeNotifier {
   final Set<LocationData> _currentLocations = {};

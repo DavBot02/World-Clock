@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'route_names.dart';
+import './route_names.dart';
 import '../utils/favorite_locations.dart';
 import '../views/location_card.dart';
 

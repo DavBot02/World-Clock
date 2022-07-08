@@ -1,4 +1,4 @@
-import 'package:one_app/utils/location_data.dart';
+import './location_data.dart';
 
 final allLocations = <LocationData>[
   LocationData(city: 'New York'),
