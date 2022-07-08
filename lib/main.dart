@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:one_app/routes/home.dart';
-import 'package:one_app/routes/set_fav_locations.dart';
-import 'package:one_app/utils/city_data.dart';
+import 'package:provider/provider.dart';
+import 'routes/home.dart';
+import 'routes/set_favorite_locations.dart';
+import 'routes/route_names.dart';
+import 'utils/favorite_locations.dart';
 
 void main() => runApp(const MyApp());
 
@@ -13,31 +15,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final Set<CityData> favoriteLocations = <CityData>{};
-
-  void updateFavoriteLocations(bool isFavorite, CityData toFavorite) {
-    setState(() {
-      if (!mounted) return;
-      if (isFavorite) {
-        favoriteLocations.remove(toFavorite);
-      } else {
-        favoriteLocations.add(toFavorite);
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => Home(
-              favoriteLocations: favoriteLocations,
-            ),
-        '/set_fav_lovations': (context) => SetFavoriteLocations(
-            favoriteLocations: favoriteLocations,
-            updateFavoriteLocations: updateFavoriteLocations),
-      },
+    return ChangeNotifierProvider(
+      create: (context) => FavoriteLocations(),
+      child: MaterialApp(
+        theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+          ),
+        ),
+        initialRoute: '/',
+        routes: {
+          root: (context) => Home(),
+          setFavoriteLocations: (context) => SetFavoriteLocations(),
+        },
+      ),
     );
   }
 }
