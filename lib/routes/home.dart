@@ -1,42 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:one_app/views/location.dart';
-import 'package:one_app/utils/location_time.dart';
+import 'package:provider/provider.dart';
+import 'route_names.dart';
+import '../utils/favorite_locations.dart';
+import '../views/location_card.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key, required this.favoriteLocations});
-  final Set<LocationTime> favoriteLocations;
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  void _pushSaved() {
-    Navigator.pushNamed(context, '/set_fav_lovations');
-  }
+class Home extends StatelessWidget {
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final PageController controller = PageController();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("World Time"),
+        title: const Text('World Time'),
         actions: [
           IconButton(
             icon: const Icon(Icons.list),
-            onPressed: _pushSaved,
+            onPressed: () {
+              Navigator.pushNamed(context, setFavoriteLocations);
+            },
             tooltip: 'Saved Suggestions',
           ),
         ],
       ),
-      body: widget.favoriteLocations.isNotEmpty
-          ? PageView(
-              controller: controller,
-              children: widget.favoriteLocations.map((location) {
-                return Location(location: location);
-              }).toList(),
-            )
-          : const Center(child: Text("Add a location!")),
+      body: Consumer<FavoriteLocations>(
+        builder: (context, favoriteLocations, child) {
+          return favoriteLocations.currentLocations.isNotEmpty
+              ? PageView(
+                  children: favoriteLocations.currentLocations
+                      .map(
+                        (location) => LocationCard(location: location),
+                      )
+                      .toList(),
+                )
+              : const Center(child: Text('Add a location!'));
+        },
+      ),
     );
   }
 }
