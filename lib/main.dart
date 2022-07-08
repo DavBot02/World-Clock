@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:one_app/routes/home.dart';
 import 'package:one_app/routes/set_fav_locations.dart';
-import 'package:one_app/utils/location_time.dart';
+import 'package:one_app/utils/city_data.dart';
 
 void main() => runApp(const MyApp());
 
@@ -13,10 +13,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final Set<LocationTime> favoriteLocations = <LocationTime>{};
+  final Set<CityData> favoriteLocations = <CityData>{};
 
-  void updateFavoriteLocations(bool isFavorite, LocationTime toFavorite) {
+  void updateFavoriteLocations(bool isFavorite, CityData toFavorite) {
     setState(() {
+      if (!mounted) return;
       if (isFavorite) {
         favoriteLocations.remove(toFavorite);
       } else {
@@ -28,12 +29,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-        ),
-      ),
       initialRoute: '/',
       routes: {
         '/': (context) => Home(
