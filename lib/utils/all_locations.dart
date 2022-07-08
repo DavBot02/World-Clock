@@ -1,18 +1,18 @@
-import 'package:one_app/utils/location_time.dart';
+import 'location_data.dart';
 
-final allLocations = <LocationTime>[
-  LocationTime(location: "CDMX", url: "america/mexico_city"),
-  LocationTime(location: "NYC", url: "america/new_york"),
-  LocationTime(location: "Los Ángeles", url: "america/los_angeles"),
-  LocationTime(location: "Madrid", url: "europe/madrid"),
-  LocationTime(location: "Budapest", url: "europe/budapest"),
-  LocationTime(location: "Rome", url: "europe/rome"),
-  LocationTime(location: "Paris", url: "europe/paris"),
-  LocationTime(location: "Macau", url: "asia/macau"),
-  LocationTime(location: "Hermosillo", url: "america/hermosillo"),
-  LocationTime(location: "Tokyo", url: "asia/tokyo"),
-  LocationTime(location: "Taipei", url: "asia/taipei"),
-  LocationTime(location: "Dubai", url: "asia/dubai"),
-  LocationTime(location: "Auckland", url: "pacific/auckland"),
-  LocationTime(location: "Baghdad", url: "asia/baghdad"),
+final allLocations = <LocationData>[
+  LocationData(location: 'Mexico City', url: 'america/mexico_city'),
+  LocationData(location: 'New York', url: 'america/new_york'),
+  LocationData(location: 'Los Ángeles', url: 'america/los_angeles'),
+  LocationData(location: 'Madrid', url: 'europe/madrid'),
+  LocationData(location: 'Budapest', url: 'europe/budapest'),
+  LocationData(location: 'Rome', url: 'europe/rome'),
+  LocationData(location: 'Paris', url: 'europe/paris'),
+  LocationData(location: 'Macau', url: 'asia/macau'),
+  LocationData(location: 'Hermosillo', url: 'america/hermosillo'),
+  LocationData(location: 'Tokyo', url: 'asia/tokyo'),
+  LocationData(location: 'Taipei', url: 'asia/taipei'),
+  LocationData(location: 'Dubai', url: 'asia/dubai'),
+  LocationData(location: 'Auckland', url: 'pacific/auckland'),
+  LocationData(location: 'Baghdad', url: 'asia/baghdad'),
 ];
