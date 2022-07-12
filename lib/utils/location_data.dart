@@ -1,5 +1,5 @@
-import 'package:http/http.dart';
-import 'dart:convert';
+import './data_service.dart';
+import './weather_data.dart';
 
 class ForecastData {
   ForecastData({required this.max, required this.min, required this.date});
@@ -10,73 +10,72 @@ class ForecastData {
 }
 
 class LocationData {
-  LocationData({required this.city});
+  LocationData(this._city, this._dataService);
 
-  String city;
-  String? time;
-  bool? isDayTime;
-  String? weather;
-  String? icon;
-  double? temp;
-  double? min;
-  double? max;
-  double? lon;
-  double? lat;
-  double? no2Concentration;
-  DateTime lastUpdate = DateTime.now();
-  List<ForecastData>? forecastData;
+  final String _city;
+  final DataService _dataService;
 
-  Future<bool> fetchData() async {
-    lastUpdate = DateTime.now();
+  String get city => _city;
 
-    String apikey = '4bff35345ac2e30031ea2f22b88d7ff6';
-    Response currentWeatherResponse = await get(
-      Uri.parse(
-        'https://api.openweathermap.org/data/2.5/weather?q=$city&units=metric&appid=$apikey',
-      ),
-    );
-    Map currentWeatherData = jsonDecode(currentWeatherResponse.body);
+  Map _formatCurrentWeatherData(Map currentWeatherData) {
     String iconCode = currentWeatherData['weather'][0]['icon'];
 
-    weather = currentWeatherData['weather'][0]['main'];
-    icon = 'https://openweathermap.org/img/wn/$iconCode@2x.png';
-    temp = currentWeatherData['main']['temp'].toDouble();
-    min = currentWeatherData['main']['temp_min'].toDouble();
-    max = currentWeatherData['main']['temp_max'].toDouble();
-    lon = currentWeatherData['coord']['lon'].toDouble();
-    lat = currentWeatherData['coord']['lat'].toDouble();
+    return {
+      'weather': currentWeatherData['weather'][0]['main'],
+      'icon': 'https://openweathermap.org/img/wn/$iconCode@2x.png',
+      'temp': currentWeatherData['main']['temp'].toDouble(),
+      'min': currentWeatherData['main']['temp_min'].toDouble(),
+      'max': currentWeatherData['main']['temp_max'].toDouble(),
+      'lon': currentWeatherData['coord']['lon'].toDouble(),
+      'lat': currentWeatherData['coord']['lat'].toDouble()
+    };
+  }
 
-    Response futureWeatherResponse = await get(
-      Uri.parse(
-        'https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&cnt=&units=metric&appid=$apikey',
-      ),
-    );
-    Map futureWeatherData = jsonDecode(futureWeatherResponse.body);
-
-    forecastData = futureWeatherData['list'].map<ForecastData>((day) {
+  List<ForecastData> _formatWeatherForecastData(Map weatherForecastData) {
+    return weatherForecastData['list'].map<ForecastData>((day) {
       return ForecastData(
         max: day['main']['temp_max'].toDouble(),
         min: day['main']['temp_min'].toDouble(),
         date: DateTime.parse(day['dt_txt']),
       );
     }).toList();
+  }
 
-    Response timeResponse = await get(
-      Uri.parse(
-        'https://timeapi.io/api/Time/current/coordinate?latitude=$lat&longitude=$lon',
-      ),
-    );
-    Map timeData = jsonDecode(timeResponse.body);
-    time = timeData['time'];
-    isDayTime = timeData['hour'] > 6 && timeData['hour'] < 20 ? true : false;
+  double _formatAirQualityData(Map airQualityData) {
+    return airQualityData['list'][0]['components']['no'].toDouble();
+  }
 
-    Response airQualityResponse = await get(
-      Uri.parse(
-        'http://api.openweathermap.org/data/2.5/air_pollution?lat=$lat&lon=$lon&appid=$apikey',
-      ),
+  Map _formatTimeData(Map timeData) {
+    return {
+      'time': timeData['time'],
+      'isDayTime': timeData['hour'] > 6 && timeData['hour'] < 20 ? true : false,
+    };
+  }
+
+  Future<WeatherData> fetchData() async {
+    Map currentWeatherData = await _dataService.fetchCurrentWeatherData(_city);
+    double lon = currentWeatherData['coord']['lon'].toDouble();
+    double lat = currentWeatherData['coord']['lat'].toDouble();
+    Map formattedCurrentWeatherData =
+        _formatCurrentWeatherData(currentWeatherData);
+
+    Map weatherForecastData =
+        await _dataService.fetchWeatherForecastData(lat, lon);
+    List<ForecastData> formattedWeatherForecastData =
+        _formatWeatherForecastData(weatherForecastData);
+
+    Map airQualityData = await _dataService.fetchAirQualityData(lat, lon);
+    double formattedAirQualityData = _formatAirQualityData(airQualityData);
+
+    Map timeData = await _dataService.fetchTimeData(lat, lon);
+    Map formattedTimeData = _formatTimeData(timeData);
+
+    return WeatherData.fromJson(
+      _city,
+      formattedCurrentWeatherData,
+      formattedWeatherForecastData,
+      formattedTimeData,
+      formattedAirQualityData,
     );
-    Map airQualityData = jsonDecode(airQualityResponse.body);
-    no2Concentration = airQualityData['list'][0]['components']['no'];
-    return true;
   }
 }

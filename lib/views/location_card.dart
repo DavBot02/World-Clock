@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import '../utils/location_data.dart';
 
-class LocationCard extends StatelessWidget {
+import '../utils/location_data.dart';
+import '../utils/weather_data.dart';
+import '../widgets/forecast_card.dart';
+
+class LocationCard extends StatefulWidget {
   const LocationCard({
     super.key,
     required this.location,
@@ -11,8 +13,17 @@ class LocationCard extends StatelessWidget {
 
   final LocationData location;
 
-  Future<bool> _fetchLocationData() {
-    return location.fetchData();
+  @override
+  State<LocationCard> createState() => _LocationCardState();
+}
+
+class _LocationCardState extends State<LocationCard> {
+  late Future<WeatherData> _weatherData;
+
+  @override
+  void initState() {
+    _weatherData = widget.location.fetchData();
+    super.initState();
   }
 
   String _airQuality(double no2Concentration) {
@@ -32,15 +43,15 @@ class LocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> tabs = ['Forecast', 'Air quality'];
-    return FutureBuilder<bool>(
-      future: _fetchLocationData(),
+    return FutureBuilder<WeatherData>(
+      future: _weatherData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Container(
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
-                  (location.isDayTime ?? true)
+                  (snapshot.data!.isDayTime)
                       ? 'assets/day.jpg'
                       : 'assets/night.jpg',
                 ),
@@ -60,7 +71,7 @@ class LocationCard extends StatelessWidget {
                             children: [
                               const SizedBox(height: 50.0),
                               Text(
-                                '${location.city} - ${location.time ?? 'Loading'}',
+                                '${snapshot.data!.city} - ${snapshot.data!.time}',
                                 style: const TextStyle(
                                   letterSpacing: 2.0,
                                   color: Colors.white,
@@ -68,21 +79,21 @@ class LocationCard extends StatelessWidget {
                               ),
                               const SizedBox(height: 20.0),
                               Text(
-                                '${location.temp.toString()}°C',
+                                '${snapshot.data!.temp.toString()}°C',
                                 style: const TextStyle(
                                   fontSize: 66.0,
                                   color: Colors.white,
                                 ),
                               ),
                               Text(
-                                'MIN: ${location.min} - MAX: ${location.max}',
+                                'MIN: ${snapshot.data!.min} - MAX: ${snapshot.data!.max}',
                                 style: const TextStyle(
                                   color: Colors.white,
                                 ),
                               ),
-                              Image.network(location.icon!),
+                              Image.network(snapshot.data!.icon),
                               Text(
-                                location.weather!,
+                                snapshot.data!.weather,
                                 style: const TextStyle(
                                   fontSize: 20.0,
                                   color: Colors.white,
@@ -113,45 +124,18 @@ class LocationCard extends StatelessWidget {
                               horizontal: 0.0,
                               vertical: 10.0,
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Column(
-                                  children: [
-                                    Text(
-                                      location.forecastData![index].max
-                                          .toString(),
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                    const SizedBox(height: 5.0),
-                                    Text(
-                                      location.forecastData![index].min
-                                          .toString(),
-                                      style:
-                                          const TextStyle(color: Colors.grey),
-                                    ),
-                                    const SizedBox(height: 5.0),
-                                  ],
-                                ),
-                                const SizedBox(width: 10.0),
-                                Text(
-                                  DateFormat.jm()
-                                      .format(
-                                        location.forecastData![index].date,
-                                      )
-                                      .toString(),
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                              ],
+                            child: ForecastCard(
+                              max: snapshot.data!.fiveDayForecast![index].max,
+                              min: snapshot.data!.fiveDayForecast![index].min,
+                              date: snapshot.data!.fiveDayForecast![index].date,
                             ),
                           );
                         },
-                        itemCount: location.forecastData!.length,
+                        itemCount: snapshot.data!.fiveDayForecast!.length,
                       ),
                       Center(
                         child: Text(
-                          _airQuality(location.no2Concentration!),
+                          _airQuality(snapshot.data!.no2Concentration),
                           style: const TextStyle(
                             fontSize: 30.0,
                             color: Colors.white,

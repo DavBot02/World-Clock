@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../utils/favorite_locations.dart';
-import '../utils/all_locations.dart';
 
-class SetFavoriteLocations extends StatefulWidget {
-  const SetFavoriteLocations({super.key});
+import './home.dart';
+import '../utils/all_locations.dart';
+import '../utils/favorite_locations.dart';
+
+class FavoritesPicker extends StatefulWidget {
+  const FavoritesPicker({super.key});
+
+  static const String routeName = 'favorites_picker';
 
   @override
-  State<SetFavoriteLocations> createState() => _SetFavoriteLocationsState();
+  State<FavoritesPicker> createState() => _SetFavoriteLocationsState();
 }
 
-class _SetFavoriteLocationsState extends State<SetFavoriteLocations> {
+class _SetFavoriteLocationsState extends State<FavoritesPicker> {
   @override
   Widget build(BuildContext context) {
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
+        // Returns to the homepage when the user overscrolls
         if (notification.metrics.pixels >
                 notification.metrics.maxScrollExtent + 100 &&
             mounted) {
-          Navigator.popUntil(context, ModalRoute.withName('/'));
+          Navigator.popUntil(context, ModalRoute.withName(Home.routeName));
         }
         return true;
       },

@@ -1,20 +1,21 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
+
 import './location_data.dart';
 
 class FavoriteLocations extends ChangeNotifier {
-  final Set<LocationData> _currentLocations = {};
+  final List<LocationData> _currentLocations = [];
 
-  UnmodifiableSetView<LocationData> get currentLocations =>
-      UnmodifiableSetView(_currentLocations);
+  UnmodifiableListView<LocationData> get currentLocations =>
+      UnmodifiableListView(_currentLocations);
 
-  void addLocation(LocationData locationTime) {
-    _currentLocations.add(locationTime);
+  void addLocation(LocationData locationData) {
+    _currentLocations.add(locationData);
     notifyListeners();
   }
 
-  void removeLocation(LocationData locationTime) {
-    _currentLocations.remove(locationTime);
+  void removeLocation(LocationData locationData) {
+    _currentLocations.remove(locationData);
     notifyListeners();
   }
 }

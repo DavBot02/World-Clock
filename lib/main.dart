@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import './routes/home.dart';
-import './routes/set_favorite_locations.dart';
-import './routes/route_names.dart';
 import './utils/favorite_locations.dart';
+import 'routes/favorites_picker.dart';
 
 void main() => runApp(const MyApp());
 
@@ -21,10 +21,10 @@ class MyApp extends StatelessWidget {
             foregroundColor: Colors.black,
           ),
         ),
-        initialRoute: root,
+        initialRoute: Home.routeName,
         routes: {
-          root: (context) => Home(),
-          setFavoriteLocations: (context) => SetFavoriteLocations(),
+          Home.routeName: (context) => const Home(),
+          FavoritesPicker.routeName: (context) => const FavoritesPicker(),
         },
       ),
     );

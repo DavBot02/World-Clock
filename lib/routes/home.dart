@@ -1,36 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './route_names.dart';
+
+import './favorites_picker.dart';
 import '../utils/favorite_locations.dart';
 import '../views/location_card.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
 
+  static const String routeName = '/';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('World Time'),
+        title: const Text('World Weather'),
         actions: [
           IconButton(
             icon: const Icon(Icons.list),
             onPressed: () {
-              Navigator.pushNamed(context, setFavoriteLocations);
+              Navigator.pushNamed(context, FavoritesPicker.routeName);
             },
-            tooltip: 'Saved Suggestions',
           ),
         ],
       ),
       body: Consumer<FavoriteLocations>(
         builder: (context, favoriteLocations, child) {
           return favoriteLocations.currentLocations.isNotEmpty
-              ? PageView(
-                  children: favoriteLocations.currentLocations
-                      .map(
-                        (location) => LocationCard(location: location),
-                      )
-                      .toList(),
+              ? PageView.builder(
+                  itemBuilder: (context, index) {
+                    return LocationCard(
+                      location: favoriteLocations.currentLocations[index],
+                    );
+                  },
+                  itemCount: favoriteLocations.currentLocations.length,
                 )
               : const Center(child: Text('Add a location!'));
         },
