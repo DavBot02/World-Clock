@@ -149,18 +149,12 @@ class _LocationCardState extends State<LocationCard> {
             ),
           );
         } else if (snapshot.hasError) {
-<<<<<<< HEAD
           return const Center(child: Text('An error has ocurred!'));
         } else {
           return const SpinKitSpinningLines(
             color: Colors.blue,
             size: 80.0,
           );
-=======
-          return Center(child: const Text('There has been an error!'));
-        } else {
-          return Center(child: const Text('Waiting for data...'));
->>>>>>> main
         }
       },
     );
