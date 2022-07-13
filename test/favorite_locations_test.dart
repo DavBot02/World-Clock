@@ -1,7 +1,7 @@
 import 'package:one_app/utils/data_service.dart';
+import 'package:one_app/utils/favorite_locations.dart';
+import 'package:one_app/utils/location_data.dart';
 import 'package:test/test.dart';
-import '../lib/utils/favorite_locations.dart';
-import '../lib/utils/location_data.dart';
 
 void main() {
   test('element should be added to set', () {

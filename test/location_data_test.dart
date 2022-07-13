@@ -73,7 +73,6 @@ void main() {
         arrangeDataServiceReturnsMockAirQualityData();
 
         WeatherData weatherData = await locationData.fetchData();
-        print(mockTimeData['hour']);
         expect(weatherData.isDayTime, true);
       },
     );

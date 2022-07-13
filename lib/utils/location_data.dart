@@ -2,7 +2,11 @@ import './data_service.dart';
 import './weather_data.dart';
 
 class ForecastData {
-  ForecastData({required this.max, required this.min, required this.date});
+  ForecastData({
+    required this.max,
+    required this.min,
+    required this.date,
+  });
 
   double max;
   double min;
@@ -10,7 +14,10 @@ class ForecastData {
 }
 
 class LocationData {
-  LocationData(this._city, this._dataService);
+  LocationData(
+    this._city,
+    this._dataService,
+  );
 
   final String _city;
   final DataService _dataService;
