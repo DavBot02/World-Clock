@@ -34,11 +34,7 @@ class ForecastCard extends StatelessWidget {
         ),
         const SizedBox(width: 10.0),
         Text(
-          DateFormat.jm()
-              .format(
-                date,
-              )
-              .toString(),
+          DateFormat.jm().format(date).toString(),
           style: const TextStyle(color: Colors.grey),
         ),
       ],

@@ -8,9 +8,9 @@ class ForecastData {
     required this.date,
   });
 
-  double max;
-  double min;
-  DateTime date;
+  final double max;
+  final double min;
+  final DateTime date;
 }
 
 class LocationData {

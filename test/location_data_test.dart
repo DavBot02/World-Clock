@@ -16,12 +16,9 @@ void main() {
     locationData = LocationData('Tokyo', mockDataService);
   });
 
-  test(
-    'initial values are correct',
-    () {
-      expect(locationData.city, 'Tokyo');
-    },
-  );
+  test('initial values are correct', () {
+    expect(locationData.city, 'Tokyo');
+  });
 
   group('getArticles', () {
     void arrangeDataServiceReturnsMockCurrentWeatherData() {
@@ -50,31 +47,24 @@ void main() {
       );
     }
 
-    test(
-      'gets weather data from data servie',
-      () async {
-        arrangeDataServiceReturnsMockCurrentWeatherData();
-        arrangeDataServiceReturnsMockWeatherForecastData();
-        arrangeDataServiceReturnsMockTimeData();
-        arrangeDataServiceReturnsMockAirQualityData();
+    test('gets weather data from data servie', () async {
+      arrangeDataServiceReturnsMockCurrentWeatherData();
+      arrangeDataServiceReturnsMockWeatherForecastData();
+      arrangeDataServiceReturnsMockTimeData();
+      arrangeDataServiceReturnsMockAirQualityData();
 
-        await locationData.fetchData();
-        verify(() => mockDataService.fetchCurrentWeatherData('Tokyo'))
-            .called(1);
-      },
-    );
+      await locationData.fetchData();
+      verify(() => mockDataService.fetchCurrentWeatherData('Tokyo')).called(1);
+    });
 
-    test(
-      '''sets correct data''',
-      () async {
-        arrangeDataServiceReturnsMockCurrentWeatherData();
-        arrangeDataServiceReturnsMockWeatherForecastData();
-        arrangeDataServiceReturnsMockTimeData();
-        arrangeDataServiceReturnsMockAirQualityData();
+    test('sets correct data', () async {
+      arrangeDataServiceReturnsMockCurrentWeatherData();
+      arrangeDataServiceReturnsMockWeatherForecastData();
+      arrangeDataServiceReturnsMockTimeData();
+      arrangeDataServiceReturnsMockAirQualityData();
 
-        WeatherData weatherData = await locationData.fetchData();
-        expect(weatherData.isDayTime, true);
-      },
-    );
+      WeatherData weatherData = await locationData.fetchData();
+      expect(weatherData.isDayTime, true);
+    });
   });
 }

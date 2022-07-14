@@ -42,18 +42,18 @@ class WeatherData {
   }
 
   final String _city;
-  String _time;
-  bool _isDayTime;
-  String _weather;
-  String _icon;
-  double _temp;
-  double _min;
-  double _max;
-  double _lon;
-  double _lat;
-  double _no2Concentration;
+  final String _time;
+  final bool _isDayTime;
+  final String _weather;
+  final String _icon;
+  final double _temp;
+  final double _min;
+  final double _max;
+  final double _lon;
+  final double _lat;
+  final double _no2Concentration;
   DateTime _lastUpdate = DateTime.now();
-  List<ForecastData>? _fiveDayForecast;
+  final List<ForecastData>? _fiveDayForecast;
 
   String get city => _city;
   String get time => _time;

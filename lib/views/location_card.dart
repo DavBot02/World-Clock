@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../utils/location_data.dart';
 import '../utils/weather_data.dart';
 import '../widgets/forecast_card.dart';
+import '../widgets/header.dart';
 
 class LocationCard extends StatefulWidget {
   const LocationCard({
@@ -19,6 +20,8 @@ class LocationCard extends StatefulWidget {
 
 class _LocationCardState extends State<LocationCard> {
   late Future<WeatherData> _weatherData;
+
+  static const List<String> tabs = ['Forecast', 'Air quality'];
 
   @override
   void initState() {
@@ -42,7 +45,6 @@ class _LocationCardState extends State<LocationCard> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> tabs = ['Forecast', 'Air quality'];
     return FutureBuilder<WeatherData>(
       future: _weatherData,
       builder: (context, snapshot) {
@@ -51,7 +53,7 @@ class _LocationCardState extends State<LocationCard> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
-                  (snapshot.data!.isDayTime)
+                  snapshot.data!.isDayTime
                       ? 'assets/day.jpg'
                       : 'assets/night.jpg',
                 ),
@@ -67,40 +69,14 @@ class _LocationCardState extends State<LocationCard> {
                     return <Widget>[
                       SliverList(
                         delegate: SliverChildListDelegate([
-                          Column(
-                            children: [
-                              const SizedBox(height: 50.0),
-                              Text(
-                                '${snapshot.data!.city} - ${snapshot.data!.time}',
-                                style: const TextStyle(
-                                  letterSpacing: 2.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 20.0),
-                              Text(
-                                '${snapshot.data!.temp.toString()}°C',
-                                style: const TextStyle(
-                                  fontSize: 66.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Text(
-                                'MIN: ${snapshot.data!.min} - MAX: ${snapshot.data!.max}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Image.network(snapshot.data!.icon),
-                              Text(
-                                snapshot.data!.weather,
-                                style: const TextStyle(
-                                  fontSize: 20.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(height: 30.0),
-                            ],
+                          Header(
+                            city: snapshot.data!.city,
+                            time: snapshot.data!.time,
+                            temp: snapshot.data!.temp,
+                            min: snapshot.data!.min,
+                            max: snapshot.data!.max,
+                            icon: snapshot.data!.icon,
+                            weather: snapshot.data!.weather,
                           ),
                           TabBar(
                             tabs: tabs
