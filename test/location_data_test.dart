@@ -3,7 +3,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:one_app/utils/data_service.dart';
 import 'package:one_app/utils/location_data.dart';
 import 'package:one_app/utils/weather_data.dart';
-import './mock_data.dart';
+
+import 'mock_data.dart';
 
 class MockDataService extends Mock implements DataService {}
 

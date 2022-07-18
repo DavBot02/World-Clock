@@ -1,5 +1,5 @@
-import './data_service.dart';
-import './location_data.dart';
+import 'data_service.dart';
+import 'location_data.dart';
 
 DataService dataService = DataService();
 

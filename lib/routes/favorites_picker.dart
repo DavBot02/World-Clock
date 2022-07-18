@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './home.dart';
 import '../utils/all_locations.dart';
 import '../utils/favorite_locations.dart';
+import '../utils/location_data.dart';
+import 'home.dart';
 
 class FavoritesPicker extends StatefulWidget {
   const FavoritesPicker({super.key});
@@ -20,8 +21,7 @@ class _SetFavoriteLocationsState extends State<FavoritesPicker> {
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
         // Returns to the homepage when the user overscrolls
-        if (notification.metrics.pixels >
-                notification.metrics.maxScrollExtent + 100 &&
+        if (notification.metrics.pixels > notification.metrics.maxScrollExtent + 100 &&
             mounted) {
           Navigator.popUntil(context, ModalRoute.withName(Home.routeName));
         }
@@ -39,26 +39,24 @@ class _SetFavoriteLocationsState extends State<FavoritesPicker> {
               ),
             ),
             Consumer<FavoriteLocations>(
-              builder: ((context, favoriteLocations, child) {
+              builder: (context, favoriteLocations, child) {
                 return SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      bool isFavorite = favoriteLocations.currentLocations
-                          .contains(allLocations[index]);
+                      LocationData location = allLocations[index];
+                      bool isFavorite =
+                          favoriteLocations.currentLocations.contains(location);
                       return ListTile(
-                        title: Text(
-                          allLocations[index].city,
-                        ),
+                        title: Text(location.city),
                         trailing: Icon(
                           isFavorite ? Icons.favorite : Icons.favorite_border,
                           color: isFavorite ? Colors.red : null,
                         ),
                         onTap: () {
                           if (isFavorite) {
-                            favoriteLocations
-                                .removeLocation(allLocations[index]);
+                            favoriteLocations.removeLocation(location);
                           } else {
-                            favoriteLocations.addLocation(allLocations[index]);
+                            favoriteLocations.addLocation(location);
                           }
                         },
                       );
@@ -66,7 +64,7 @@ class _SetFavoriteLocationsState extends State<FavoritesPicker> {
                     childCount: allLocations.length,
                   ),
                 );
-              }),
+              },
             )
           ],
           physics: const BouncingScrollPhysics(),

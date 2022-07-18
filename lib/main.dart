@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './routes/favorites_picker.dart';
-import './routes/home.dart';
-import './utils/favorite_locations.dart';
+import 'routes/favorites_picker.dart';
+import 'routes/home.dart';
+import 'utils/favorite_locations.dart';
 
 void main() => runApp(const MyApp());
 

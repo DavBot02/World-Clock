@@ -1,5 +1,5 @@
-import './data_service.dart';
-import './weather_data.dart';
+import 'data_service.dart';
+import 'weather_data.dart';
 
 class ForecastData {
   ForecastData({
@@ -66,10 +66,8 @@ class LocationData {
     Map formattedCurrentWeatherData =
         _formatCurrentWeatherData(currentWeatherData);
 
-    Map weatherForecastData =
-        await _dataService.fetchWeatherForecastData(lat, lon);
-    List<ForecastData> formattedWeatherForecastData =
-        _formatWeatherForecastData(weatherForecastData);
+    Map weatherForecastData = await _dataService.fetchWeatherForecastData(lat, lon);
+    List<ForecastData> formattedWeatherForecastData = _formatWeatherForecastData(weatherForecastData);
 
     Map airQualityData = await _dataService.fetchAirQualityData(lat, lon);
     double formattedAirQualityData = _formatAirQualityData(airQualityData);

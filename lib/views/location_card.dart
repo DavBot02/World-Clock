@@ -21,7 +21,7 @@ class LocationCard extends StatefulWidget {
 class _LocationCardState extends State<LocationCard> {
   late Future<WeatherData> _weatherData;
 
-  static const List<String> tabs = ['Forecast', 'Air quality'];
+  static const List<String> _tabs = ['Forecast', 'Air quality'];
 
   @override
   void initState() {
@@ -54,8 +54,8 @@ class _LocationCardState extends State<LocationCard> {
               image: DecorationImage(
                 image: AssetImage(
                   snapshot.data!.isDayTime
-                      ? 'assets/day.jpg'
-                      : 'assets/night.jpg',
+                    ? 'assets/day.jpg'
+                    : 'assets/night.jpg',
                 ),
                 fit: BoxFit.cover,
               ),
@@ -63,7 +63,7 @@ class _LocationCardState extends State<LocationCard> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
               child: DefaultTabController(
-                length: tabs.length,
+                length: _tabs.length,
                 child: NestedScrollView(
                   headerSliverBuilder: (context, innerBoxIsScrolled) {
                     return <Widget>[
@@ -79,9 +79,9 @@ class _LocationCardState extends State<LocationCard> {
                             weather: snapshot.data!.weather,
                           ),
                           TabBar(
-                            tabs: tabs
-                                .map((String name) => Tab(text: name))
-                                .toList(),
+                            tabs: _tabs
+                              .map((String name) => Tab(text: name))
+                              .toList(),
                           ),
                           const SizedBox(
                             height: 20.0,

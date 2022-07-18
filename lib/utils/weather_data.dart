@@ -1,4 +1,4 @@
-import './location_data.dart';
+import 'location_data.dart';
 
 class WeatherData {
   WeatherData(

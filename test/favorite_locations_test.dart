@@ -11,6 +11,6 @@ void main() {
 
     favoriteLocations.addLocation(locationData);
 
-    expect(favoriteLocations.currentLocations.contains(locationData), true);
+    expect(favoriteLocations.currentLocations, contains(locationData));
   });
 }

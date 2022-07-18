@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './favorites_picker.dart';
 import '../utils/favorite_locations.dart';
 import '../views/location_card.dart';
+import 'favorites_picker.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -27,15 +27,11 @@ class Home extends StatelessWidget {
       body: Consumer<FavoriteLocations>(
         builder: (context, favoriteLocations, child) {
           return favoriteLocations.currentLocations.isNotEmpty
-              ? PageView.builder(
-                  itemBuilder: (context, index) {
-                    return LocationCard(
-                      location: favoriteLocations.currentLocations[index],
-                    );
-                  },
-                  itemCount: favoriteLocations.currentLocations.length,
-                )
-              : const Center(child: Text('Add a location!'));
+            ? PageView.builder(
+                itemBuilder: (context, index) => LocationCard(location: favoriteLocations.currentLocations[index]),
+                itemCount: favoriteLocations.currentLocations.length,
+              )
+            : const Center(child: Text('Add a location!'));
         },
       ),
     );
