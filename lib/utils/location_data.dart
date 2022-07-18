@@ -1,39 +1,86 @@
-import 'package:http/http.dart';
-import 'package:intl/intl.dart';
-import 'dart:convert';
+import 'data_service.dart';
+import 'weather_data.dart';
+
+class ForecastData {
+  ForecastData({
+    required this.max,
+    required this.min,
+    required this.date,
+  });
+
+  final double max;
+  final double min;
+  final DateTime date;
+}
 
 class LocationData {
-  LocationData({required this.location, required this.url});
+  LocationData(
+    this._city,
+    this._dataService,
+  );
 
-  String location;
-  String url;
-  String? time;
-  int? dayOfWeek;
-  int? dayOfyear;
-  int? unixTime;
-  int? weekNumber;
-  bool? isDayTime;
+  final String _city;
+  final DataService _dataService;
 
-  Future<bool> fetchData() async {
-    Response response =
-        await get(Uri.parse('http://worldtimeapi.org/api/timezone/$url'));
-    Map data = jsonDecode(response.body);
+  String get city => _city;
 
-    String datetime = data['datetime'];
-    String utcOffset = data['utc_offset'].substring(1, 3);
+  Map _formatCurrentWeatherData(Map currentWeatherData) {
+    String iconCode = currentWeatherData['weather'][0]['icon'];
 
-    DateTime now = DateTime.parse(datetime);
+    return {
+      'weather': currentWeatherData['weather'][0]['main'],
+      'icon': 'https://openweathermap.org/img/wn/$iconCode@2x.png',
+      'temp': currentWeatherData['main']['temp'].toDouble(),
+      'min': currentWeatherData['main']['temp_min'].toDouble(),
+      'max': currentWeatherData['main']['temp_max'].toDouble(),
+      'lon': currentWeatherData['coord']['lon'].toDouble(),
+      'lat': currentWeatherData['coord']['lat'].toDouble()
+    };
+  }
 
-    now = data['utc_offset'].substring(0, 1) == '+'
-        ? now.add(Duration(hours: int.parse(utcOffset)))
-        : now.subtract(Duration(hours: int.parse(utcOffset)));
-    isDayTime = now.hour > 6 && now.hour < 20 ? true : false;
-    dayOfWeek = data['day_of_week'];
-    dayOfyear = data['day_of_year'];
-    unixTime = data['unixtime'];
-    weekNumber = data['week_number'];
-    time = DateFormat.jm().format(now);
+  List<ForecastData> _formatWeatherForecastData(Map weatherForecastData) {
+    return weatherForecastData['list'].map<ForecastData>((day) {
+      return ForecastData(
+        max: day['main']['temp_max'].toDouble(),
+        min: day['main']['temp_min'].toDouble(),
+        date: DateTime.parse(day['dt_txt']),
+      );
+    }).toList();
+  }
 
-    return true;
+  double _formatAirQualityData(Map airQualityData) {
+    return airQualityData['list'][0]['components']['no'].toDouble();
+  }
+
+  Map _formatTimeData(Map timeData) {
+    return {
+      'time': timeData['time'],
+      'isDayTime': timeData['hour'] > 6 && timeData['hour'] < 20 ? true : false,
+    };
+  }
+
+  Future<WeatherData> fetchData() async {
+    Map currentWeatherData = await _dataService.fetchCurrentWeatherData(_city);
+    double lon = currentWeatherData['coord']['lon'].toDouble();
+    double lat = currentWeatherData['coord']['lat'].toDouble();
+    Map formattedCurrentWeatherData =
+        _formatCurrentWeatherData(currentWeatherData);
+
+    Map weatherForecastData = await _dataService.fetchWeatherForecastData(lat, lon);
+    List<ForecastData> formattedWeatherForecastData = _formatWeatherForecastData(weatherForecastData);
+
+    Map airQualityData = await _dataService.fetchAirQualityData(lat, lon);
+    double formattedAirQualityData = _formatAirQualityData(airQualityData);
+
+    Map timeData = await _dataService.fetchTimeData(lat, lon);
+    Map formattedTimeData = _formatTimeData(timeData);
+
+    return WeatherData.fromJson(
+      _city,
+      formattedCurrentWeatherData,
+      formattedWeatherForecastData,
+      formattedTimeData,
+      formattedAirQualityData,
+    );
   }
 }
